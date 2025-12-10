@@ -4,11 +4,15 @@ import { useStories } from '@/hooks/useStories';
 import { WelcomeScreen } from '@/components/story/WelcomeScreen';
 import { ThemeSelector } from '@/components/story/ThemeSelector';
 import { StoryBuilder } from '@/components/story/StoryBuilder';
+import { StoryPreview } from '@/components/story/StoryPreview';
+import { demoStory } from '@/data/demoStory';
+import { themes } from '@/data/themes';
 
 type AppState = 
   | { screen: 'welcome' }
   | { screen: 'theme-selector' }
-  | { screen: 'builder'; theme: ThemeType; story?: Story };
+  | { screen: 'builder'; theme: ThemeType; story?: Story }
+  | { screen: 'demo-preview' };
 
 const Index = () => {
   const { stories, saveStory, deleteStory } = useStories();
@@ -38,6 +42,23 @@ const Index = () => {
     setState({ screen: 'theme-selector' });
   };
 
+  const handleReadDemo = () => {
+    setState({ screen: 'demo-preview' });
+  };
+
+  const handleCopyDemo = () => {
+    const copiedStory: Story = {
+      ...demoStory,
+      id: crypto.randomUUID(),
+      name: `${demoStory.name} (kopia)`,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    setState({ screen: 'builder', theme: copiedStory.theme, story: copiedStory });
+  };
+
+  const demoTheme = themes.find(t => t.id === demoStory.theme);
+
   switch (state.screen) {
     case 'welcome':
       return (
@@ -46,6 +67,8 @@ const Index = () => {
           onCreateNew={handleCreateNew}
           onOpenStory={handleOpenStory}
           onDeleteStory={deleteStory}
+          onReadDemo={handleReadDemo}
+          onCopyDemo={handleCopyDemo}
         />
       );
     
@@ -53,6 +76,16 @@ const Index = () => {
       return (
         <ThemeSelector
           onSelectTheme={handleSelectTheme}
+          onBack={handleBackToWelcome}
+        />
+      );
+    
+    case 'demo-preview':
+      return (
+        <StoryPreview
+          storyName={demoStory.name}
+          stations={demoStory.stations}
+          theme={demoTheme!}
           onBack={handleBackToWelcome}
         />
       );
