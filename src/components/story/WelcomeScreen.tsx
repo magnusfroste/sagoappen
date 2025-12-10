@@ -143,11 +143,11 @@ export function WelcomeScreen({ stories, onCreateNew, onOpenStory, onDeleteStory
         </div>
       )}
 
-      {/* Decorative elements */}
-      <div className="fixed top-10 left-10 text-6xl opacity-20 animate-float" style={{ animationDelay: '0s' }}>🌟</div>
-      <div className="fixed top-20 right-20 text-5xl opacity-20 animate-float" style={{ animationDelay: '0.5s' }}>🦋</div>
-      <div className="fixed bottom-20 left-20 text-5xl opacity-20 animate-float" style={{ animationDelay: '1s' }}>🌈</div>
-      <div className="fixed bottom-10 right-10 text-6xl opacity-20 animate-float" style={{ animationDelay: '1.5s' }}>✨</div>
+      {/* Decorative elements - Hidden on small screens */}
+      <div className="hidden md:block fixed top-10 left-10 text-6xl opacity-20 animate-float pointer-events-none" style={{ animationDelay: '0s' }}>🌟</div>
+      <div className="hidden md:block fixed top-20 right-20 text-5xl opacity-20 animate-float pointer-events-none" style={{ animationDelay: '0.5s' }}>🦋</div>
+      <div className="hidden md:block fixed bottom-20 left-20 text-5xl opacity-20 animate-float pointer-events-none" style={{ animationDelay: '1s' }}>🌈</div>
+      <div className="hidden md:block fixed bottom-10 right-10 text-6xl opacity-20 animate-float pointer-events-none" style={{ animationDelay: '1.5s' }}>✨</div>
     </div>
   );
 }
