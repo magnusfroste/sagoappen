@@ -1,17 +1,22 @@
 import { Story } from '@/types/story';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Plus, BookOpen, Trash2 } from 'lucide-react';
+import { Plus, BookOpen, Trash2, Star, Sparkles } from 'lucide-react';
 import { themes } from '@/data/themes';
+import { demoStory } from '@/data/demoStory';
 
 interface WelcomeScreenProps {
   stories: Story[];
   onCreateNew: () => void;
   onOpenStory: (story: Story) => void;
   onDeleteStory: (id: string) => void;
+  onReadDemo: () => void;
+  onCopyDemo: () => void;
 }
 
-export function WelcomeScreen({ stories, onCreateNew, onOpenStory, onDeleteStory }: WelcomeScreenProps) {
+export function WelcomeScreen({ stories, onCreateNew, onOpenStory, onDeleteStory, onReadDemo, onCopyDemo }: WelcomeScreenProps) {
+  const demoTheme = themes.find(t => t.id === demoStory.theme);
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b from-background via-muted/30 to-background">
       {/* Hero Section */}
@@ -34,6 +39,45 @@ export function WelcomeScreen({ stories, onCreateNew, onOpenStory, onDeleteStory
         <Plus className="w-8 h-8 mr-3" />
         Skapa ny saga
       </Button>
+
+      {/* Demo Story Section */}
+      <div className="w-full max-w-2xl mb-10">
+        <div className="flex items-center gap-2 mb-4">
+          <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
+          <h2 className="text-2xl font-bold text-foreground">Exempelsaga</h2>
+        </div>
+        <Card
+          className="p-6 border-2 bg-gradient-to-br from-primary/5 via-background to-secondary/10 hover:shadow-xl transition-all duration-300"
+          style={{ borderColor: demoTheme?.color }}
+        >
+          <div className="flex items-start gap-4 mb-4">
+            <span className="text-5xl">{demoTheme?.emoji || '🏰'}</span>
+            <div className="flex-1">
+              <h3 className="text-xl font-bold text-foreground mb-1">{demoStory.name}</h3>
+              <p className="text-muted-foreground">
+                En klassisk saga om vänskap och mod – perfekt som inspiration!
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-3 flex-wrap">
+            <Button
+              variant="outline"
+              onClick={onReadDemo}
+              className="flex-1 min-w-[140px]"
+            >
+              <BookOpen className="w-5 h-5 mr-2" />
+              Läs sagan
+            </Button>
+            <Button
+              onClick={onCopyDemo}
+              className="flex-1 min-w-[140px] bg-secondary hover:bg-secondary/80"
+            >
+              <Sparkles className="w-5 h-5 mr-2" />
+              Använd som inspiration
+            </Button>
+          </div>
+        </Card>
+      </div>
 
       {/* Saved Stories */}
       {stories.length > 0 && (
