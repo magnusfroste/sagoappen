@@ -11,6 +11,8 @@ interface StoryStationCardProps {
   onDrop: (element: StoryElement) => void;
   onTextChange: (text: string) => void;
   onRemoveElement: () => void;
+  onFocus?: () => void;
+  isActive?: boolean;
 }
 
 export function StoryStationCard({ 
@@ -18,7 +20,9 @@ export function StoryStationCard({
   themeColor, 
   onDrop, 
   onTextChange,
-  onRemoveElement 
+  onRemoveElement,
+  onFocus,
+  isActive = false,
 }: StoryStationCardProps) {
   const handleDrop = (element: StoryElement) => {
     playSound('success');
@@ -34,7 +38,7 @@ export function StoryStationCard({
 
   return (
     <div 
-      className="flex flex-col bg-card rounded-2xl p-4 shadow-lg border-2 transition-all duration-300"
+      className={`flex flex-col bg-card rounded-2xl p-4 shadow-lg border-2 transition-all duration-300 ${isActive ? 'ring-2 ring-primary ring-offset-2' : ''}`}
       style={{ borderColor: themeColor }}
     >
       {/* Header */}
@@ -85,6 +89,7 @@ export function StoryStationCard({
       <Textarea
         value={station.text}
         onChange={(e) => onTextChange(e.target.value)}
+        onFocus={onFocus}
         placeholder="Skriv din text här..."
         className="resize-none text-base min-h-[80px] border-2 focus:border-primary"
       />

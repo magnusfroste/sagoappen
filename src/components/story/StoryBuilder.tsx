@@ -4,6 +4,7 @@ import { themes, createEmptyStations } from '@/data/themes';
 import { ImageLibrary } from './ImageLibrary';
 import { StoryStationCard } from './StoryStationCard';
 import { StoryPreview } from './StoryPreview';
+import { StoryAssistant } from './StoryAssistant';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft, Eye, Save, Edit2 } from 'lucide-react';
@@ -23,6 +24,7 @@ export function StoryBuilder({ initialStory, themeType, onBack, onSave }: StoryB
   const [stations, setStations] = useState(initialStory?.stations || createEmptyStations());
   const [isPreview, setIsPreview] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
+  const [activeStationId, setActiveStationId] = useState<string>('character');
 
   const handleDropOnStation = (stationId: string, element: StoryElement) => {
     setStations(prev => prev.map(s => 
@@ -54,6 +56,20 @@ export function StoryBuilder({ initialStory, themeType, onBack, onSave }: StoryB
     };
     onSave(story);
     toast.success('Sagan sparad! 🎉');
+  };
+
+  const activeStation = stations.find(s => s.id === activeStationId);
+
+  const handleSuggestion = (suggestion: string) => {
+    // Apply suggestion to active station's text
+    if (activeStationId) {
+      setStations(prev => prev.map(s => 
+        s.id === activeStationId 
+          ? { ...s, text: s.text ? `${s.text}\n\n${suggestion}` : suggestion }
+          : s
+      ));
+      toast.success('Förslag tillagt! ✨');
+    }
   };
 
   if (isPreview) {
@@ -138,10 +154,24 @@ export function StoryBuilder({ initialStory, themeType, onBack, onSave }: StoryB
                 onDrop={(element) => handleDropOnStation(station.id, element)}
                 onTextChange={(text) => handleTextChange(station.id, text)}
                 onRemoveElement={() => handleRemoveElement(station.id)}
+                onFocus={() => setActiveStationId(station.id)}
+                isActive={station.id === activeStationId}
               />
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Trollis Assistant */}
+      <div className="fixed bottom-4 right-4 z-50 w-80 max-w-[calc(100vw-2rem)]">
+        <StoryAssistant
+          activeStation={activeStationId}
+          theme={themeType}
+          themeName={theme.name}
+          element={activeStation?.element || null}
+          currentText={activeStation?.text || ''}
+          onSuggestion={handleSuggestion}
+        />
       </div>
     </div>
   );
