@@ -3,6 +3,7 @@ import { useDrop } from '@/hooks/useDragDrop';
 import { Textarea } from '@/components/ui/textarea';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { playSound } from '@/hooks/useSound';
 
 interface StoryStationCardProps {
   station: StoryStation;
@@ -19,7 +20,17 @@ export function StoryStationCard({
   onTextChange,
   onRemoveElement 
 }: StoryStationCardProps) {
-  const { isOver, dropProps } = useDrop(onDrop);
+  const handleDrop = (element: StoryElement) => {
+    playSound('success');
+    onDrop(element);
+  };
+
+  const handleRemove = () => {
+    playSound('remove');
+    onRemoveElement();
+  };
+
+  const { isOver, dropProps } = useDrop(handleDrop);
 
   return (
     <div 
@@ -57,7 +68,7 @@ export function StoryStationCard({
             <Button
               variant="ghost"
               size="icon"
-              onClick={onRemoveElement}
+              onClick={handleRemove}
               className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               <X className="w-4 h-4" />

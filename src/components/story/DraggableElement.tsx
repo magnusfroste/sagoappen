@@ -1,5 +1,6 @@
 import { StoryElement } from '@/types/story';
 import { useDrag } from '@/hooks/useDragDrop';
+import { playSound } from '@/hooks/useSound';
 
 interface DraggableElementProps {
   element: StoryElement;
@@ -8,9 +9,21 @@ interface DraggableElementProps {
 export function DraggableElement({ element }: DraggableElementProps) {
   const { isDragging, dragProps } = useDrag(element);
 
+  const handleDragStart = (e: React.DragEvent | React.TouchEvent) => {
+    playSound('pickup');
+    dragProps.onDragStart?.(e as React.DragEvent);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    playSound('pickup');
+    dragProps.onTouchStart?.(e);
+  };
+
   return (
     <div
       {...dragProps}
+      onDragStart={handleDragStart}
+      onTouchStart={handleTouchStart}
       className={`
         flex flex-col items-center justify-center p-3 rounded-xl
         bg-card border-2 border-border cursor-grab active:cursor-grabbing
