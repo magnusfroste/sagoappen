@@ -31,7 +31,8 @@ export function StoryAssistant({
 }: StoryAssistantProps) {
   const { isLoading, message, error, askTrollis, clearMessage } = useStoryAssistant();
   const { isPlaying: isSpeaking, isLoading: isSpeechLoading, narrateText, stopNarration } = useNarration();
-  const [isMinimized, setIsMinimized] = useState(false);
+  // Start minimized on small screens for better UX
+  const [isMinimized, setIsMinimized] = useState(() => window.innerWidth < 768);
   const [displayedMessage, setDisplayedMessage] = useState<string | null>(null);
   const [typingText, setTypingText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -117,7 +118,7 @@ export function StoryAssistant({
     return (
       <button
         onClick={() => setIsMinimized(false)}
-        className="fixed bottom-4 right-4 z-50 bg-primary text-primary-foreground rounded-full p-4 shadow-lg hover:scale-110 transition-transform animate-bounce"
+        className="bg-primary text-primary-foreground rounded-full p-4 shadow-lg hover:scale-110 active:scale-95 transition-transform animate-bounce min-w-[56px] min-h-[56px] flex items-center justify-center touch-manipulation"
       >
         <span className="text-3xl">🧙</span>
       </button>
@@ -141,7 +142,7 @@ export function StoryAssistant({
           variant="ghost"
           size="icon"
           onClick={() => setIsMinimized(true)}
-          className="text-muted-foreground hover:text-foreground hover:scale-110 transition-transform"
+          className="text-muted-foreground hover:text-foreground hover:scale-110 active:scale-95 transition-transform min-w-[44px] min-h-[44px] touch-manipulation"
         >
           <ChevronDown className="w-5 h-5" />
         </Button>
@@ -188,34 +189,31 @@ export function StoryAssistant({
         )}
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex flex-wrap gap-2">
+      {/* Action Buttons - Touch optimized */}
+      <div className="grid grid-cols-2 gap-2">
         <Button
           variant="outline"
-          size="sm"
           onClick={() => handleAction('tips')}
           disabled={isLoading}
-          className="flex-1 min-w-[100px] border-primary/30 hover:bg-primary/10 hover:scale-105 active:scale-95 transition-transform"
+          className="min-h-[44px] border-primary/30 hover:bg-primary/10 hover:scale-105 active:scale-95 transition-transform touch-manipulation"
         >
           <Sparkles className={`w-4 h-4 mr-1 ${isLoading ? '' : 'group-hover:animate-spin'}`} />
           Tips
         </Button>
         <Button
           variant="outline"
-          size="sm"
           onClick={() => handleAction('question')}
           disabled={isLoading}
-          className="flex-1 min-w-[100px] border-primary/30 hover:bg-primary/10 hover:scale-105 active:scale-95 transition-transform"
+          className="min-h-[44px] border-primary/30 hover:bg-primary/10 hover:scale-105 active:scale-95 transition-transform touch-manipulation"
         >
           <HelpCircle className="w-4 h-4 mr-1" />
           Fråga mig
         </Button>
         <Button
           variant="default"
-          size="sm"
           onClick={() => handleAction('generate')}
           disabled={isLoading}
-          className="flex-1 min-w-[100px] hover:scale-105 active:scale-95 transition-transform group"
+          className="min-h-[44px] hover:scale-105 active:scale-95 transition-transform group touch-manipulation col-span-2"
         >
           <Wand2 className="w-4 h-4 mr-1 group-hover:rotate-12 transition-transform" />
           Trollstaven
@@ -223,10 +221,9 @@ export function StoryAssistant({
         {currentText && (
           <Button
             variant="secondary"
-            size="sm"
             onClick={() => handleAction('improve')}
             disabled={isLoading}
-            className="flex-1 min-w-[100px] hover:scale-105 active:scale-95 transition-transform animate-fade-in"
+            className="min-h-[44px] hover:scale-105 active:scale-95 transition-transform animate-fade-in touch-manipulation col-span-2"
           >
             <Sparkles className="w-4 h-4 mr-1" />
             Förbättra

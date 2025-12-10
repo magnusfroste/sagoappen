@@ -84,44 +84,44 @@ export function StoryBuilder({ initialStory, themeType, onBack, onSave }: StoryB
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-muted/30 to-background p-4 md:p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <Button variant="ghost" onClick={onBack} className="text-base">
-          <ArrowLeft className="w-5 h-5 mr-2" />
-          Tillbaka
+    <div className="min-h-screen bg-gradient-to-b from-background via-muted/30 to-background p-4 md:p-6 pb-24 md:pb-6">
+      {/* Header - Responsive for iPad */}
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <Button variant="ghost" onClick={onBack} className="text-base min-h-[44px] min-w-[44px]">
+          <ArrowLeft className="w-5 h-5 md:mr-2" />
+          <span className="hidden md:inline">Tillbaka</span>
         </Button>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 order-3 md:order-2 w-full md:w-auto justify-center">
           {isEditingName ? (
             <Input
               value={storyName}
               onChange={(e) => setStoryName(e.target.value)}
               onBlur={() => setIsEditingName(false)}
               onKeyDown={(e) => e.key === 'Enter' && setIsEditingName(false)}
-              className="w-48 text-center font-bold"
+              className="w-48 text-center font-bold min-h-[44px]"
               autoFocus
             />
           ) : (
             <button 
               onClick={() => setIsEditingName(true)}
-              className="flex items-center gap-2 text-xl font-bold text-foreground hover:text-primary transition-colors"
+              className="flex items-center gap-2 text-lg md:text-xl font-bold text-foreground hover:text-primary transition-colors min-h-[44px] px-2"
             >
               <span className="text-2xl">{theme.emoji}</span>
-              {storyName}
-              <Edit2 className="w-4 h-4 text-muted-foreground" />
+              <span className="truncate max-w-[150px] md:max-w-none">{storyName}</span>
+              <Edit2 className="w-4 h-4 text-muted-foreground shrink-0" />
             </button>
           )}
         </div>
 
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setIsPreview(true)} className="text-base">
-            <Eye className="w-5 h-5 mr-2" />
-            Förhandsgranska
+        <div className="flex gap-2 order-2 md:order-3">
+          <Button variant="outline" onClick={() => setIsPreview(true)} className="text-base min-h-[44px] min-w-[44px]">
+            <Eye className="w-5 h-5 md:mr-2" />
+            <span className="hidden md:inline">Förhandsgranska</span>
           </Button>
-          <Button onClick={handleSave} className="text-base">
-            <Save className="w-5 h-5 mr-2" />
-            Spara
+          <Button onClick={handleSave} className="text-base min-h-[44px] min-w-[44px]">
+            <Save className="w-5 h-5 md:mr-2" />
+            <span className="hidden md:inline">Spara</span>
           </Button>
         </div>
       </div>
@@ -162,8 +162,8 @@ export function StoryBuilder({ initialStory, themeType, onBack, onSave }: StoryB
         </div>
       </div>
 
-      {/* Trollis Assistant */}
-      <div className="fixed bottom-4 right-4 z-50 w-80 max-w-[calc(100vw-2rem)]">
+      {/* Trollis Assistant - Positioned for iPad */}
+      <div className="fixed bottom-4 right-4 z-50 w-80 max-w-[calc(100vw-2rem)] md:bottom-4 md:right-4">
         <StoryAssistant
           activeStation={activeStationId}
           theme={themeType}

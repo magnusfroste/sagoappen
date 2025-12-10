@@ -67,33 +67,35 @@ export function StoryStationCard({
         </div>
       </div>
 
-      {/* Drop Zone */}
+      {/* Drop Zone - Touch optimized */}
       <div
         {...dropProps}
         className={`
-          relative min-h-[100px] rounded-xl border-2 border-dashed 
+          relative min-h-[120px] md:min-h-[100px] rounded-xl border-3 border-dashed 
           flex items-center justify-center mb-3 transition-all duration-200
-          ${isOver ? 'border-primary bg-primary/10 scale-105' : 'border-border bg-muted/30'}
-          ${station.element ? 'border-solid' : ''}
+          ${isOver ? 'border-primary bg-primary/20 scale-105 shadow-lg' : 'border-border bg-muted/30'}
+          ${station.element ? 'border-solid border-2' : ''}
+          touch-manipulation
         `}
       >
         {station.element ? (
-          <div className="relative flex flex-col items-center p-2">
-            <span className="text-6xl">{station.element.emoji}</span>
-            <span className="text-sm font-medium text-foreground">{station.element.name}</span>
+          <div className="relative flex flex-col items-center p-3">
+            <span className="text-6xl md:text-6xl">{station.element.emoji}</span>
+            <span className="text-sm font-medium text-foreground mt-1">{station.element.name}</span>
             <Button
               variant="ghost"
               size="icon"
               onClick={handleRemove}
-              className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="absolute -top-3 -right-3 w-10 h-10 md:w-8 md:h-8 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90 active:scale-95 transition-transform touch-manipulation shadow-md"
             >
-              <X className="w-4 h-4" />
+              <X className="w-5 h-5 md:w-4 md:h-4" />
             </Button>
           </div>
         ) : (
-          <p className="text-muted-foreground text-sm text-center px-4">
-            Dra hit en bild 📥
-          </p>
+          <div className="text-center px-4 py-2">
+            <p className="text-muted-foreground text-sm">Dra hit en bild 📥</p>
+            <p className="text-muted-foreground/60 text-xs mt-1 hidden md:block">eller tryck på en bild ovan</p>
+          </div>
         )}
       </div>
 
