@@ -5,6 +5,7 @@ import { ImageLibrary } from './ImageLibrary';
 import { StoryStationCard } from './StoryStationCard';
 import { StoryPreview } from './StoryPreview';
 import { StoryAssistant } from './StoryAssistant';
+import { DragGhost } from './DragGhost';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft, Eye, Save, Edit2 } from 'lucide-react';
@@ -173,6 +174,8 @@ export function StoryBuilder({ initialStory, themeType, onBack, onSave }: StoryB
           onSuggestion={handleSuggestion}
         />
       </div>
+      {/* Drag Ghost for touch feedback */}
+      <DragGhost />
     </div>
   );
 }
