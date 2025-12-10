@@ -1,5 +1,4 @@
 import { useState, useRef, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 export function useNarration() {
@@ -30,15 +29,26 @@ export function useNarration() {
     }
 
     try {
-      const { data, error } = await supabase.functions.invoke('story-narration', {
-        body: { text },
-      });
+      // Use direct fetch for binary audio response
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/story-narration`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ text }),
+        }
+      );
 
-      if (error) {
-        throw new Error(error.message || 'Failed to generate narration');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to generate narration');
       }
 
-      const audioUrl = URL.createObjectURL(data);
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
       const audio = new Audio(audioUrl);
       audioRef.current = audio;
 
