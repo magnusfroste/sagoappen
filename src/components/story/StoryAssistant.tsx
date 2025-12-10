@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { useStoryAssistant, AssistantAction } from '@/hooks/useStoryAssistant';
+import { useNarration } from '@/hooks/useNarration';
 import { StoryElement } from '@/types/story';
-import { Wand2, HelpCircle, Sparkles, ChevronDown, Loader2 } from 'lucide-react';
+import { Wand2, HelpCircle, Sparkles, ChevronDown, Loader2, Volume2, VolumeX } from 'lucide-react';
 
 interface StoryAssistantProps {
   activeStation: string;
@@ -29,12 +30,26 @@ export function StoryAssistant({
   onSuggestion,
 }: StoryAssistantProps) {
   const { isLoading, message, error, askTrollis, clearMessage } = useStoryAssistant();
+  const { isPlaying: isSpeaking, isLoading: isSpeechLoading, narrateText, stopNarration } = useNarration();
   const [isMinimized, setIsMinimized] = useState(false);
   const [displayedMessage, setDisplayedMessage] = useState<string | null>(null);
   const [typingText, setTypingText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [hasNewMessage, setHasNewMessage] = useState(false);
   const typingRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Clean text for TTS (remove emojis)
+  const cleanTextForSpeech = (text: string) => {
+    return text.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '').trim();
+  };
+
+  const handleSpeak = () => {
+    if (isSpeaking) {
+      stopNarration();
+    } else if (displayedMessage) {
+      narrateText(cleanTextForSpeech(displayedMessage));
+    }
+  };
 
   // Typing animation effect
   const animateTyping = (text: string) => {
@@ -146,10 +161,30 @@ export function StoryAssistant({
             </span>
           </div>
         ) : (
-          <p className="text-foreground text-sm leading-relaxed min-h-[3rem]">
-            {typingText}
-            {isTyping && <span className="inline-block w-0.5 h-4 bg-primary ml-0.5 animate-pulse" />}
-          </p>
+          <div className="flex gap-2">
+            <p className="text-foreground text-sm leading-relaxed min-h-[3rem] flex-1">
+              {typingText}
+              {isTyping && <span className="inline-block w-0.5 h-4 bg-primary ml-0.5 animate-pulse" />}
+            </p>
+            {displayedMessage && !isTyping && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleSpeak}
+                disabled={isSpeechLoading}
+                className="shrink-0 text-muted-foreground hover:text-primary transition-colors h-8 w-8"
+                title={isSpeaking ? 'Stoppa uppläsning' : 'Lyssna på Trollis'}
+              >
+                {isSpeechLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : isSpeaking ? (
+                  <VolumeX className="w-4 h-4" />
+                ) : (
+                  <Volume2 className="w-4 h-4" />
+                )}
+              </Button>
+            )}
+          </div>
         )}
       </div>
 
