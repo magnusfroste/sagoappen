@@ -1,10 +1,11 @@
 export type ThemeType = 'classic' | 'animals' | 'adventure';
+export type ElementCategory = 'character' | 'place' | 'object' | 'problem' | 'action' | 'ending';
 
 export interface StoryElement {
   id: string;
   emoji: string;
   name: string;
-  category: 'character' | 'object' | 'place';
+  category: ElementCategory;
 }
 
 export interface StoryStation {
