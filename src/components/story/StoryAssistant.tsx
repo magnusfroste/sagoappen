@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { useStoryAssistant, AssistantAction } from '@/hooks/useStoryAssistant';
 import { StoryElement } from '@/types/story';
-import { Wand2, HelpCircle, Sparkles, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
+import { Wand2, HelpCircle, Sparkles, ChevronDown, Loader2 } from 'lucide-react';
 
 interface StoryAssistantProps {
   activeStation: string;
@@ -31,20 +31,56 @@ export function StoryAssistant({
   const { isLoading, message, error, askTrollis, clearMessage } = useStoryAssistant();
   const [isMinimized, setIsMinimized] = useState(false);
   const [displayedMessage, setDisplayedMessage] = useState<string | null>(null);
+  const [typingText, setTypingText] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [hasNewMessage, setHasNewMessage] = useState(false);
+  const typingRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Typing animation effect
+  const animateTyping = (text: string) => {
+    setIsTyping(true);
+    setTypingText('');
+    setHasNewMessage(true);
+    
+    let index = 0;
+    const speed = 25; // ms per character
+    
+    if (typingRef.current) clearInterval(typingRef.current);
+    
+    typingRef.current = setInterval(() => {
+      if (index < text.length) {
+        setTypingText(text.slice(0, index + 1));
+        index++;
+      } else {
+        if (typingRef.current) clearInterval(typingRef.current);
+        setIsTyping(false);
+        setTimeout(() => setHasNewMessage(false), 500);
+      }
+    }, speed);
+  };
 
   // Update greeting when station changes
   useEffect(() => {
-    setDisplayedMessage(STATION_GREETINGS[activeStation] || STATION_GREETINGS.character);
+    const greeting = STATION_GREETINGS[activeStation] || STATION_GREETINGS.character;
+    setDisplayedMessage(greeting);
+    animateTyping(greeting);
     clearMessage();
+    
+    return () => {
+      if (typingRef.current) clearInterval(typingRef.current);
+    };
   }, [activeStation, clearMessage]);
 
   // Update displayed message when AI responds
   useEffect(() => {
     if (message) {
       setDisplayedMessage(message);
+      animateTyping(message);
     }
     if (error) {
-      setDisplayedMessage(`😅 ${error}`);
+      const errorMsg = `😅 ${error}`;
+      setDisplayedMessage(errorMsg);
+      animateTyping(errorMsg);
     }
   }, [message, error]);
 
@@ -57,9 +93,7 @@ export function StoryAssistant({
       currentText,
     });
 
-    // If generate action and we got a result, offer to use it
     if (action === 'generate' && result && onSuggestion) {
-      // Extract just the suggestion part if possible
       onSuggestion(result);
     }
   };
@@ -76,11 +110,13 @@ export function StoryAssistant({
   }
 
   return (
-    <div className="bg-card border-2 border-primary/30 rounded-2xl p-4 shadow-xl relative">
+    <div className={`bg-card border-2 border-primary/30 rounded-2xl p-4 shadow-xl relative transition-all duration-300 ${hasNewMessage ? 'animate-pop' : ''}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="text-4xl animate-pulse">🧙</div>
+          <div className={`text-4xl transition-transform duration-300 ${isLoading ? 'animate-wiggle' : isTyping ? 'animate-bounce-soft' : 'hover:animate-wiggle'}`}>
+            🧙
+          </div>
           <div>
             <h3 className="font-bold text-foreground">Trollis</h3>
             <p className="text-xs text-muted-foreground">Din sagohjälpare</p>
@@ -90,23 +126,29 @@ export function StoryAssistant({
           variant="ghost"
           size="icon"
           onClick={() => setIsMinimized(true)}
-          className="text-muted-foreground hover:text-foreground"
+          className="text-muted-foreground hover:text-foreground hover:scale-110 transition-transform"
         >
           <ChevronDown className="w-5 h-5" />
         </Button>
       </div>
 
       {/* Speech Bubble */}
-      <div className="bg-muted/50 rounded-xl p-4 mb-4 relative">
+      <div className={`bg-muted/50 rounded-xl p-4 mb-4 relative transition-all duration-200 ${hasNewMessage ? 'scale-[1.02]' : 'scale-100'}`}>
         <div className="absolute -top-2 left-6 w-4 h-4 bg-muted/50 rotate-45" />
         {isLoading ? (
           <div className="flex items-center gap-2 text-muted-foreground">
             <Loader2 className="w-4 h-4 animate-spin" />
-            <span>Trollis tänker...</span>
+            <span className="animate-pulse">Trollis tänker...</span>
+            <span className="flex gap-1">
+              <span className="w-2 h-2 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+              <span className="w-2 h-2 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+              <span className="w-2 h-2 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+            </span>
           </div>
         ) : (
-          <p className="text-foreground text-sm leading-relaxed">
-            {displayedMessage}
+          <p className="text-foreground text-sm leading-relaxed min-h-[3rem]">
+            {typingText}
+            {isTyping && <span className="inline-block w-0.5 h-4 bg-primary ml-0.5 animate-pulse" />}
           </p>
         )}
       </div>
@@ -118,9 +160,9 @@ export function StoryAssistant({
           size="sm"
           onClick={() => handleAction('tips')}
           disabled={isLoading}
-          className="flex-1 min-w-[100px] border-primary/30 hover:bg-primary/10"
+          className="flex-1 min-w-[100px] border-primary/30 hover:bg-primary/10 hover:scale-105 active:scale-95 transition-transform"
         >
-          <Sparkles className="w-4 h-4 mr-1" />
+          <Sparkles className={`w-4 h-4 mr-1 ${isLoading ? '' : 'group-hover:animate-spin'}`} />
           Tips
         </Button>
         <Button
@@ -128,7 +170,7 @@ export function StoryAssistant({
           size="sm"
           onClick={() => handleAction('question')}
           disabled={isLoading}
-          className="flex-1 min-w-[100px] border-primary/30 hover:bg-primary/10"
+          className="flex-1 min-w-[100px] border-primary/30 hover:bg-primary/10 hover:scale-105 active:scale-95 transition-transform"
         >
           <HelpCircle className="w-4 h-4 mr-1" />
           Fråga mig
@@ -138,9 +180,9 @@ export function StoryAssistant({
           size="sm"
           onClick={() => handleAction('generate')}
           disabled={isLoading}
-          className="flex-1 min-w-[100px]"
+          className="flex-1 min-w-[100px] hover:scale-105 active:scale-95 transition-transform group"
         >
-          <Wand2 className="w-4 h-4 mr-1" />
+          <Wand2 className="w-4 h-4 mr-1 group-hover:rotate-12 transition-transform" />
           Trollstaven
         </Button>
         {currentText && (
@@ -149,7 +191,7 @@ export function StoryAssistant({
             size="sm"
             onClick={() => handleAction('improve')}
             disabled={isLoading}
-            className="flex-1 min-w-[100px]"
+            className="flex-1 min-w-[100px] hover:scale-105 active:scale-95 transition-transform animate-fade-in"
           >
             <Sparkles className="w-4 h-4 mr-1" />
             Förbättra
@@ -158,7 +200,7 @@ export function StoryAssistant({
       </div>
 
       {/* Encouragement */}
-      <p className="text-xs text-center text-muted-foreground mt-3">
+      <p className="text-xs text-center text-muted-foreground mt-3 animate-fade-in">
         💡 Försök gärna själv först - jag finns här om du kör fast!
       </p>
     </div>
