@@ -1,3 +1,4 @@
+import { useRef, useEffect } from 'react';
 import { StoryStation, StoryElement } from '@/types/story';
 import { useDrop } from '@/hooks/useDragDrop';
 import { Textarea } from '@/components/ui/textarea';
@@ -24,6 +25,8 @@ export function StoryStationCard({
   onFocus,
   isActive = false,
 }: StoryStationCardProps) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
   const handleDrop = (element: StoryElement) => {
     playSound('success');
     onDrop(element);
@@ -35,6 +38,15 @@ export function StoryStationCard({
   };
 
   const { isOver, dropProps } = useDrop(handleDrop);
+
+  // Auto-resize textarea based on content
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`;
+    }
+  }, [station.text]);
 
   return (
     <div 
@@ -87,11 +99,12 @@ export function StoryStationCard({
 
       {/* Text Area */}
       <Textarea
+        ref={textareaRef}
         value={station.text}
         onChange={(e) => onTextChange(e.target.value)}
         onFocus={onFocus}
         placeholder="Skriv din text här..."
-        className="resize-none text-base min-h-[80px] border-2 focus:border-primary"
+        className="text-base min-h-[80px] max-h-[200px] border-2 focus:border-primary transition-all duration-200 overflow-y-auto"
       />
     </div>
   );
