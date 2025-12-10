@@ -85,6 +85,7 @@ const Index = () => {
           stations={state.story.stations}
           theme={demoTheme!}
           onBack={handleBackToWelcome}
+          isReadOnly
         />
       );
     }
