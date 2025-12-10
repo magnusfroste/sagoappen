@@ -5,14 +5,13 @@ import { WelcomeScreen } from '@/components/story/WelcomeScreen';
 import { ThemeSelector } from '@/components/story/ThemeSelector';
 import { StoryBuilder } from '@/components/story/StoryBuilder';
 import { StoryPreview } from '@/components/story/StoryPreview';
-import { demoStory } from '@/data/demoStory';
 import { themes } from '@/data/themes';
 
 type AppState = 
   | { screen: 'welcome' }
   | { screen: 'theme-selector' }
   | { screen: 'builder'; theme: ThemeType; story?: Story }
-  | { screen: 'demo-preview' };
+  | { screen: 'demo-preview'; story: Story };
 
 const Index = () => {
   const { stories, saveStory, deleteStory } = useStories();
@@ -42,11 +41,11 @@ const Index = () => {
     setState({ screen: 'theme-selector' });
   };
 
-  const handleReadDemo = () => {
-    setState({ screen: 'demo-preview' });
+  const handleReadDemo = (story: Story) => {
+    setState({ screen: 'demo-preview', story });
   };
 
-  const handleCopyDemo = () => {
+  const handleCopyDemo = (demoStory: Story) => {
     const copiedStory: Story = {
       ...demoStory,
       id: crypto.randomUUID(),
@@ -56,8 +55,6 @@ const Index = () => {
     };
     setState({ screen: 'builder', theme: copiedStory.theme, story: copiedStory });
   };
-
-  const demoTheme = themes.find(t => t.id === demoStory.theme);
 
   switch (state.screen) {
     case 'welcome':
@@ -80,15 +77,17 @@ const Index = () => {
         />
       );
     
-    case 'demo-preview':
+    case 'demo-preview': {
+      const demoTheme = themes.find(t => t.id === state.story.theme);
       return (
         <StoryPreview
-          storyName={demoStory.name}
-          stations={demoStory.stations}
+          storyName={state.story.name}
+          stations={state.story.stations}
           theme={demoTheme!}
           onBack={handleBackToWelcome}
         />
       );
+    }
     
     case 'builder':
       return (

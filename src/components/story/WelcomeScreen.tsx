@@ -3,20 +3,24 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Plus, BookOpen, Trash2, Star, Sparkles } from 'lucide-react';
 import { themes } from '@/data/themes';
-import { demoStory } from '@/data/demoStory';
+import { demoStories } from '@/data/demoStory';
 
 interface WelcomeScreenProps {
   stories: Story[];
   onCreateNew: () => void;
   onOpenStory: (story: Story) => void;
   onDeleteStory: (id: string) => void;
-  onReadDemo: () => void;
-  onCopyDemo: () => void;
+  onReadDemo: (story: Story) => void;
+  onCopyDemo: (story: Story) => void;
 }
 
-export function WelcomeScreen({ stories, onCreateNew, onOpenStory, onDeleteStory, onReadDemo, onCopyDemo }: WelcomeScreenProps) {
-  const demoTheme = themes.find(t => t.id === demoStory.theme);
+const demoDescriptions: Record<string, string> = {
+  'classic': 'En klassisk saga om vänskap och mod',
+  'animals': 'En varm berättelse om vänskap i skogen',
+  'adventure': 'Ett spännande äventyr på havet',
+};
 
+export function WelcomeScreen({ stories, onCreateNew, onOpenStory, onDeleteStory, onReadDemo, onCopyDemo }: WelcomeScreenProps) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b from-background via-muted/30 to-background">
       {/* Hero Section */}
@@ -40,43 +44,56 @@ export function WelcomeScreen({ stories, onCreateNew, onOpenStory, onDeleteStory
         Skapa ny saga
       </Button>
 
-      {/* Demo Story Section */}
+      {/* Demo Stories Section */}
       <div className="w-full max-w-2xl mb-10">
         <div className="flex items-center gap-2 mb-4">
           <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
-          <h2 className="text-2xl font-bold text-foreground">Exempelsaga</h2>
+          <h2 className="text-2xl font-bold text-foreground">Exempelsagor</h2>
         </div>
-        <Card
-          className="p-6 border-2 bg-gradient-to-br from-primary/5 via-background to-secondary/10 hover:shadow-xl transition-all duration-300"
-          style={{ borderColor: demoTheme?.color }}
-        >
-          <div className="flex items-start gap-4 mb-4">
-            <span className="text-5xl">{demoTheme?.emoji || '🏰'}</span>
-            <div className="flex-1">
-              <h3 className="text-xl font-bold text-foreground mb-1">{demoStory.name}</h3>
-              <p className="text-muted-foreground">
-                En klassisk saga om vänskap och mod – perfekt som inspiration!
-              </p>
-            </div>
-          </div>
-          <div className="flex gap-3 flex-wrap">
-            <Button
-              variant="outline"
-              onClick={onReadDemo}
-              className="flex-1 min-w-[140px]"
-            >
-              <BookOpen className="w-5 h-5 mr-2" />
-              Läs sagan
-            </Button>
-            <Button
-              onClick={onCopyDemo}
-              className="flex-1 min-w-[140px] bg-secondary hover:bg-secondary/80"
-            >
-              <Sparkles className="w-5 h-5 mr-2" />
-              Använd som inspiration
-            </Button>
-          </div>
-        </Card>
+        <div className="grid gap-4">
+          {demoStories.map((demo, index) => {
+            const demoTheme = themes.find(t => t.id === demo.theme);
+            return (
+              <Card
+                key={demo.id}
+                className="p-5 border-2 bg-gradient-to-br from-primary/5 via-background to-secondary/10 hover:shadow-xl transition-all duration-300"
+                style={{ 
+                  borderColor: demoTheme?.color,
+                  animationDelay: `${index * 0.1}s`
+                }}
+              >
+                <div className="flex items-start gap-4 mb-4">
+                  <span className="text-4xl">{demoTheme?.emoji || '📖'}</span>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-foreground mb-1">{demo.name}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {demoDescriptions[demo.theme] || 'En spännande saga'}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-3 flex-wrap">
+                  <Button
+                    variant="outline"
+                    onClick={() => onReadDemo(demo)}
+                    className="flex-1 min-w-[130px]"
+                    size="sm"
+                  >
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    Läs sagan
+                  </Button>
+                  <Button
+                    onClick={() => onCopyDemo(demo)}
+                    className="flex-1 min-w-[130px] bg-secondary hover:bg-secondary/80"
+                    size="sm"
+                  >
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    Använd som inspiration
+                  </Button>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
       </div>
 
       {/* Saved Stories */}
