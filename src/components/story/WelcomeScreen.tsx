@@ -1,7 +1,7 @@
 import { Story } from '@/types/story';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Plus, BookOpen, Trash2, Star, Sparkles } from 'lucide-react';
+import { Plus, BookOpen, Trash2, Star, Sparkles, Github } from 'lucide-react';
 import { themes } from '@/data/themes';
 import { demoStories } from '@/data/demoStory';
 
@@ -145,15 +145,16 @@ export function WelcomeScreen({ stories, onCreateNew, onOpenStory, onDeleteStory
 
       {/* Footer */}
       <footer className="mt-16 pb-6 text-center text-sm text-muted-foreground">
-        <p>
+        <p className="flex items-center justify-center gap-1">
           Magnus Froste •{' '}
           <a 
             href="https://github.com/magnusfroste" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="hover:text-foreground underline underline-offset-2 transition-colors"
+            className="hover:text-foreground underline underline-offset-2 transition-colors inline-flex items-center gap-1"
           >
-            github/magnusfroste
+            <Github className="w-4 h-4" />
+            magnusfroste
           </a>
           {' '}• Open Sourced
         </p>
