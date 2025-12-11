@@ -143,6 +143,22 @@ export function WelcomeScreen({ stories, onCreateNew, onOpenStory, onDeleteStory
         </div>
       )}
 
+      {/* Footer */}
+      <footer className="mt-16 pb-6 text-center text-sm text-muted-foreground">
+        <p>
+          Magnus Froste •{' '}
+          <a 
+            href="https://github.com/magnusfroste" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="hover:text-foreground underline underline-offset-2 transition-colors"
+          >
+            github/magnusfroste
+          </a>
+          {' '}• Open Sourced
+        </p>
+      </footer>
+
       {/* Decorative elements - Hidden on small screens */}
       <div className="hidden md:block fixed top-10 left-10 text-6xl opacity-20 animate-float pointer-events-none" style={{ animationDelay: '0s' }}>🌟</div>
       <div className="hidden md:block fixed top-20 right-20 text-5xl opacity-20 animate-float pointer-events-none" style={{ animationDelay: '0.5s' }}>🦋</div>
