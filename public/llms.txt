@@ -1,0 +1,16 @@
+# Sagoappen
+
+> Sagoappen är en lekfull webbapp som hjälper barn i åldern 6-8 år att skapa sina egna sagor genom att dra och släppa bilder och skriva text.
+
+## Om appen
+
+Sagoappen är en introduktion till berättande för de allra minsta. Barnen väljer ett tema (Klassisk saga, Djur & natur eller Äventyr), drar bilder från ett bildbibliotek till fyra stationer i "sagotråden" — Vem?, Problem, Lösning och Slut — och skriver sin egen text till varje del. Appen innehåller en AI-assistent vid namn Trollis som ger tips, ställer inspirerande frågor och kan förbättra texten. Sagorna kan läsas upp högt med text-till-tal och sparas lokalt på enheten. Appen är responsiv och touch-optimerad för iPad och surfplattor.
+
+## Målgrupp
+
+Barn 6-8 år (lågstadiet) samt deras föräldrar och lärare.
+
+## Viktiga länkar
+
+- [Startsida](https://sagoappen.skolappar.com/)
+- [Källkod på GitHub](https://github.com/magnusfroste)
