@@ -37,7 +37,7 @@ export function StoryAssistant({
   const [typingText, setTypingText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [hasNewMessage, setHasNewMessage] = useState(false);
-  const typingRef = useRef<NodeJS.Timeout | null>(null);
+  const typingRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Clean text for TTS (remove emojis)
   const cleanTextForSpeech = (text: string) => {
