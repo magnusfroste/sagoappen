@@ -163,8 +163,8 @@ export function StoryBuilder({ initialStory, themeType, onBack, onSave }: StoryB
         </div>
       </div>
 
-      {/* Trollis Assistant - Positioned for iPad */}
-      <div className="fixed bottom-4 right-4 z-50 w-80 max-w-[calc(100vw-2rem)] md:bottom-4 md:right-4">
+      {/* Trollis – egen kolumn på platta, flytande bara på mobil */}
+      <div className="mt-6 w-full md:mt-8 [&>div]:w-full">
         <StoryAssistant
           activeStation={activeStationId}
           theme={themeType}
