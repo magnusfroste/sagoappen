@@ -6,6 +6,8 @@ text och kan få tips av trollet Trollis.
 
 **Spela:** https://sagoverkstan.skolappar.com · En del av [Skolappar](https://www.skolappar.com) – pedagogiska appar av föräldrar · öppen källkod (MIT)
 
+![Sagoappen](public/kort.png)
+
 Började som ett Lovable-projekt och körs nu fristående.
 
 ## Vad du kan göra
