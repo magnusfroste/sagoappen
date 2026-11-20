@@ -53,8 +53,6 @@ Bygget serveras av nginx med `deploy/nginx.conf`.
   `story-narration` (`supabase/functions/`), som gör om den till tal hos ElevenLabs.
   Klienten läser `VITE_SUPABASE_URL` och `VITE_SUPABASE_PUBLISHABLE_KEY`. Funktionen behöver
   `ELEVENLABS_API_KEY`. Utan dessa fungerar allt utom uppläsningen.
-- `supabase/functions/story-assistant` är den gamla molnversionen av Trollis och används inte
-  av appen längre.
 
 ## Struktur
 
@@ -69,7 +67,7 @@ src/
   hooks/useStories.ts         sparade sagor (localStorage)
   hooks/useNarration.ts       uppläsning via Supabase-funktionen
   hooks/useSound.ts           små ljudeffekter med Web Audio
-supabase/functions/           story-narration (ElevenLabs) och den oanvända story-assistant
+supabase/functions/           story-narration (ElevenLabs)
 deploy/nginx.conf             nginx-konfiguration för containern
 ```
 

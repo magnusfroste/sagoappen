@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sagoappen.skolappar.com/sitemap.xml
+Sitemap: https://sagoverkstan.skolappar.com/sitemap.xml
