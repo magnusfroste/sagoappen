@@ -43,7 +43,8 @@ docker build -t sagoappen .
 docker run --rm -p 8080:8080 sagoappen
 ```
 
-Bygget serveras av nginx med `deploy/nginx.conf`.
+Bygget serveras av en liten Node-server, `deploy/server.mjs`, som också sköter uppläsningen.
+Sätt `ELEVENLABS_API_KEY` för att slå på den: `docker run --rm -p 8080:8080 -e ELEVENLABS_API_KEY=… sagoappen`.
 
 ## Integritet
 
@@ -51,10 +52,11 @@ Bygget serveras av nginx med `deploy/nginx.conf`.
 - Sagorna sparas bara i webbläsaren, i `localStorage` under nyckeln `sagoappen-stories`.
 - Trollis svar och alla ljudeffekter skapas lokalt.
 - Typsnittet Fredoka följer med appen (`public/fonts/`). Nunito ligger också med som reserv.
-- **Uppläsning** är det enda som går över nätet. Texten skickas till Supabase-funktionen
-  `story-narration` (`supabase/functions/`), som gör om den till tal hos ElevenLabs.
-  Klienten läser `VITE_SUPABASE_URL` och `VITE_SUPABASE_PUBLISHABLE_KEY`. Funktionen behöver
-  `ELEVENLABS_API_KEY`. Utan dessa fungerar allt utom uppläsningen.
+- **Uppläsning** är det enda som går över nätet. Texten skickas till appens egen server
+  (`POST /api/story-narration`), som gör om den till tal hos ElevenLabs med rösten Charlotte.
+  Nyckeln, `ELEVENLABS_API_KEY`, finns bara på servern. Utan den fungerar allt utom uppläsningen.
+  Servern tar högst 5 000 tecken per uppläsning och 40 uppläsningar per adress och tio minuter
+  (`NARRATION_MAX_CHARS`, `NARRATION_PER_10_MIN`).
 
 ## Struktur
 
@@ -67,10 +69,9 @@ src/
   data/demoStory.ts           exempelsagor
   lib/trollis.ts              Trollis svar, helt lokalt
   hooks/useStories.ts         sparade sagor (localStorage)
-  hooks/useNarration.ts       uppläsning via Supabase-funktionen
+  hooks/useNarration.ts       uppläsning via appens server
   hooks/useSound.ts           små ljudeffekter med Web Audio
-supabase/functions/           story-narration (ElevenLabs)
-deploy/nginx.conf             nginx-konfiguration för containern
+deploy/server.mjs             servern: appen och uppläsningen (ElevenLabs)
 ```
 
 ## Licens
