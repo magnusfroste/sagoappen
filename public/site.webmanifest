@@ -1,1 +1,23 @@
-{"name": "Sagoappen", "short_name": "Sagoappen", "description": "Sagoappen hjälper barn att bygga en saga i fyra steg: vem, problem, lösning och slut. Dra in bilder, skriv text och få tips av Trollis – helt lokalt, utan konto och utan nät.", "start_url": "/", "display": "standalone", "background_color": "#db2777", "theme_color": "#db2777", "icons": [{"src": "/icon-512.png", "sizes": "512x512", "type": "image/png"}, {"src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml"}]}
+{
+  "name": "Sagoappen",
+  "short_name": "Sagoappen",
+  "description": "Sagoappen hjälper barn att bygga en saga i fyra steg: vem, problem, lösning och slut. Dra in bilder, skriv text och få tips av Trollis – helt lokalt, utan konto och utan nät.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#db2777",
+  "theme_color": "#db2777",
+  "icons": [
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "scope": "/",
+  "lang": "sv"
+}
