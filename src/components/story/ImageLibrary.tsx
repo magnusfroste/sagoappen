@@ -1,9 +1,12 @@
 import { useState } from 'react';
-import { Theme, ElementCategory } from '@/types/story';
+import { Theme, ElementCategory, StoryElement } from '@/types/story';
 import { DraggableElement } from './DraggableElement';
 
 interface ImageLibraryProps {
   theme: Theme;
+  /** Tryck pa en bild valjer den; sedan trycker man pa en station. */
+  onSelect?: (element: StoryElement) => void;
+  selectedId?: string | null;
 }
 
 const categories: { id: ElementCategory; label: string; emoji: string }[] = [
@@ -15,7 +18,7 @@ const categories: { id: ElementCategory; label: string; emoji: string }[] = [
   { id: 'ending', label: 'Slut', emoji: '🎉' },
 ];
 
-export function ImageLibrary({ theme }: ImageLibraryProps) {
+export function ImageLibrary({ theme, onSelect, selectedId }: ImageLibraryProps) {
   const [activeCategory, setActiveCategory] = useState<ElementCategory>('character');
   
   const filteredElements = theme.elements.filter(e => e.category === activeCategory);
@@ -51,7 +54,12 @@ export function ImageLibrary({ theme }: ImageLibraryProps) {
       {/* Elements Grid */}
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
         {filteredElements.map(element => (
-          <DraggableElement key={element.id} element={element} />
+          <DraggableElement
+            key={element.id}
+            element={element}
+            selected={selectedId === element.id}
+            onSelect={onSelect}
+          />
         ))}
       </div>
       

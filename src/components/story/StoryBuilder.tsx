@@ -26,6 +26,8 @@ export function StoryBuilder({ initialStory, themeType, onBack, onSave }: StoryB
   const [isPreview, setIsPreview] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [activeStationId, setActiveStationId] = useState<string>('character');
+  // Tryck-pa-bild-sedan-station: pa iPad finns inget HTML5-drag med fingret.
+  const [valdBild, setValdBild] = useState<StoryElement | null>(null);
 
   const handleDropOnStation = (stationId: string, element: StoryElement) => {
     setStations(prev => prev.map(s => 
@@ -129,7 +131,11 @@ export function StoryBuilder({ initialStory, themeType, onBack, onSave }: StoryB
 
       {/* Image Library */}
       <div className="mb-6">
-        <ImageLibrary theme={theme} />
+        <ImageLibrary
+          theme={theme}
+          selectedId={valdBild?.id ?? null}
+          onSelect={(el) => setValdBild(prev => (prev?.id === el.id ? null : el))}
+        />
       </div>
 
       {/* Story Thread (Sagotråden) */}
@@ -157,14 +163,16 @@ export function StoryBuilder({ initialStory, themeType, onBack, onSave }: StoryB
                 onRemoveElement={() => handleRemoveElement(station.id)}
                 onFocus={() => setActiveStationId(station.id)}
                 isActive={station.id === activeStationId}
+                valdBild={valdBild}
+                onPlaceSelected={() => setValdBild(null)}
               />
             ))}
           </div>
         </div>
       </div>
 
-      {/* Trollis Assistant - Positioned for iPad */}
-      <div className="fixed bottom-4 right-4 z-50 w-80 max-w-[calc(100vw-2rem)] md:bottom-4 md:right-4">
+      {/* Trollis – egen kolumn på platta, flytande bara på mobil */}
+      <div className="mt-6 w-full md:mt-8 [&>div]:w-full">
         <StoryAssistant
           activeStation={activeStationId}
           theme={themeType}
