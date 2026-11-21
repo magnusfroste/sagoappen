@@ -1,7 +1,0 @@
-project_id = "yxlxqzvpoepvpcnkzhoe"
-
-[functions.story-assistant]
-verify_jwt = false
-
-[functions.story-narration]
-verify_jwt = false

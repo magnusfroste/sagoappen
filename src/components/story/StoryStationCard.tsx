@@ -14,6 +14,9 @@ interface StoryStationCardProps {
   onRemoveElement: () => void;
   onFocus?: () => void;
   isActive?: boolean;
+  /** Bild vald i biblioteket - da racker det att trycka pa zonen. */
+  valdBild?: StoryElement | null;
+  onPlaceSelected?: () => void;
 }
 
 export function StoryStationCard({ 
@@ -24,6 +27,8 @@ export function StoryStationCard({
   onRemoveElement,
   onFocus,
   isActive = false,
+  valdBild = null,
+  onPlaceSelected,
 }: StoryStationCardProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -70,11 +75,18 @@ export function StoryStationCard({
       {/* Drop Zone - Touch optimized */}
       <div
         {...dropProps}
+        onClick={() => {
+          if (valdBild) {
+            onPlaceSelected?.();
+            handleDrop(valdBild);
+          }
+        }}
         className={`
           relative min-h-[120px] md:min-h-[100px] rounded-xl border-3 border-dashed 
           flex items-center justify-center mb-3 transition-all duration-200
           ${isOver ? 'border-primary bg-primary/20 scale-105 shadow-lg' : 'border-border bg-muted/30'}
           ${station.element ? 'border-solid border-2' : ''}
+          ${valdBild ? 'border-primary bg-primary/10 cursor-pointer' : ''}
           touch-manipulation
         `}
       >

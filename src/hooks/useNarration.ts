@@ -29,18 +29,13 @@ export function useNarration() {
     }
 
     try {
-      // Use direct fetch for binary audio response
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/story-narration`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          },
-          body: JSON.stringify({ text }),
-        }
-      );
+      // The app's own server reads the text aloud (deploy/server.mjs); the
+      // ElevenLabs key stays there.
+      const response = await fetch('/api/story-narration', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
