@@ -1,5 +1,5 @@
 // Sagoappen's own server: the built app, and the story narration it used to
-// fetch from a Supabase edge function in Lovable Cloud.
+// fetch from a hosted function elsewhere.
 //
 // POST /api/story-narration {"text": "..."} -> audio/mpeg, read by ElevenLabs
 // with the same voice and settings the edge function used. The key stays here

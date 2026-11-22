@@ -8,7 +8,7 @@ text och kan få tips av trollet Trollis.
 
 ![Sagoappen](public/kort.png)
 
-Började som ett Lovable-projekt och körs nu fristående.
+Körs fristående.
 
 ## Vad du kan göra
 
