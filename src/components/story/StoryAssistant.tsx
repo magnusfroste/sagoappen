@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useStoryAssistant, AssistantAction } from '@/hooks/useStoryAssistant';
 import { useNarration } from '@/hooks/useNarration';
 import { StoryElement } from '@/types/story';
+import { report } from '@/lib/skolappar';
 import { Wand2, HelpCircle, Sparkles, ChevronDown, Loader2, Volume2, VolumeX } from 'lucide-react';
 
 interface StoryAssistantProps {
@@ -101,6 +102,7 @@ export function StoryAssistant({
   }, [message, error]);
 
   const handleAction = async (action: AssistantAction) => {
+    report('hint');
     const result = await askTrollis(action, {
       station: activeStation,
       theme,
