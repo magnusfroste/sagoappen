@@ -6,6 +6,7 @@ import { ThemeSelector } from '@/components/story/ThemeSelector';
 import { StoryBuilder } from '@/components/story/StoryBuilder';
 import { StoryPreview } from '@/components/story/StoryPreview';
 import { themes } from '@/data/themes';
+import { report } from '@/lib/skolappar';
 
 type AppState = 
   | { screen: 'welcome' }
@@ -22,10 +23,12 @@ const Index = () => {
   };
 
   const handleSelectTheme = (theme: ThemeType) => {
+    report('round_start');
     setState({ screen: 'builder', theme });
   };
 
   const handleOpenStory = (story: Story) => {
+    report('round_start');
     setState({ screen: 'builder', theme: story.theme, story });
   };
 
@@ -46,6 +49,7 @@ const Index = () => {
   };
 
   const handleCopyDemo = (demoStory: Story) => {
+    report('round_start');
     const copiedStory: Story = {
       ...demoStory,
       id: crypto.randomUUID(),

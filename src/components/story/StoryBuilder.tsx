@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Story, StoryElement, ThemeType } from '@/types/story';
 import { themes, createEmptyStations } from '@/data/themes';
 import { ImageLibrary } from './ImageLibrary';
@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft, Eye, Save, Edit2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { report } from '@/lib/skolappar';
 
 interface StoryBuilderProps {
   initialStory?: Story;
@@ -28,6 +29,7 @@ export function StoryBuilder({ initialStory, themeType, onBack, onSave }: StoryB
   const [activeStationId, setActiveStationId] = useState<string>('character');
   // Tryck-pa-bild-sedan-station: pa iPad finns inget HTML5-drag med fingret.
   const [valdBild, setValdBild] = useState<StoryElement | null>(null);
+  const reportedDone = useRef(false);
 
   const handleDropOnStation = (stationId: string, element: StoryElement) => {
     setStations(prev => prev.map(s => 
@@ -58,6 +60,12 @@ export function StoryBuilder({ initialStory, themeType, onBack, onSave }: StoryB
       updatedAt: new Date().toISOString(),
     };
     onSave(story);
+    if (!reportedDone.current) {
+      // The result: how much of the story thread is filled (a picture or text per station).
+      const filled = stations.filter(s => s.element || s.text.trim()).length;
+      report('round_done', Math.round((filled / stations.length) * 100));
+      reportedDone.current = true;
+    }
     toast.success('Sagan sparad! 🎉');
   };
 
