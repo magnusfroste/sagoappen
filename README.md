@@ -4,7 +4,7 @@ Sagoappen hjälper barn från förskolan till åk 3 att bygga en egen saga i fyr
 problem, lösning och slut. Barnet väljer ett tema, lägger bilder på varje station, skriver
 text och kan få tips av trollet Trollis.
 
-**Spela:** https://sagoverkstan.skolappar.com · En del av [Skolappar](https://www.skolappar.com) – pedagogiska appar av föräldrar · öppen källkod (MIT)
+**Spela:** https://sagoverkstan.skolappar.org · En del av [Skolappar](https://www.skolappar.org) – pedagogiska appar av föräldrar · öppen källkod (MIT)
 
 ![Sagoappen](public/kort.png)
 

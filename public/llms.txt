@@ -12,5 +12,5 @@ Barn 6-8 år (lågstadiet) samt deras föräldrar och lärare.
 
 ## Viktiga länkar
 
-- [Startsida](https://sagoverkstan.skolappar.com/)
+- [Startsida](https://sagoverkstan.skolappar.org/)
 - [Källkod på GitHub](https://github.com/magnusfroste)
