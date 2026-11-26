@@ -34,17 +34,7 @@ npm run preview    # förhandsgranska bygget
 npm run lint       # eslint
 ```
 
-Docker-bygget använder Node 22.
-
-## Docker
-
-```bash
-docker build -t sagoappen .
-docker run --rm -p 8080:8080 sagoappen
-```
-
-Bygget serveras av en liten Node-server, `deploy/server.mjs`, som också sköter uppläsningen.
-Sätt `ELEVENLABS_API_KEY` för att slå på den: `docker run --rm -p 8080:8080 -e ELEVENLABS_API_KEY=… sagoappen`.
+Appen är statisk: `npm run build` ger `dist/`, och den läggs ut som en webbplats utan egen server.
 
 ## Integritet
 
@@ -52,11 +42,11 @@ Sätt `ELEVENLABS_API_KEY` för att slå på den: `docker run --rm -p 8080:8080 
 - Sagorna sparas bara i webbläsaren, i `localStorage` under nyckeln `sagoappen-stories`.
 - Trollis svar och alla ljudeffekter skapas lokalt.
 - Typsnittet Fredoka följer med appen (`public/fonts/`). Nunito ligger också med som reserv.
-- **Uppläsning** är det enda som går över nätet. Texten skickas till appens egen server
-  (`POST /api/story-narration`), som gör om den till tal hos ElevenLabs med rösten Charlotte.
-  Nyckeln, `ELEVENLABS_API_KEY`, finns bara på servern. Utan den fungerar allt utom uppläsningen.
-  Servern tar högst 5 000 tecken per uppläsning och 40 uppläsningar per adress och tio minuter
-  (`NARRATION_MAX_CHARS`, `NARRATION_PER_10_MIN`).
+- **Uppläsning** är det enda som går över nätet. Texten skickas till Shipholm
+  (`POST https://api.shipholm.com/speak`), som läser upp den med sin egen svenska röst (Piper,
+  öppen källkod, på svenska servrar). Ingen nyckel behövs, men bara appens egen adress får använda
+  den – lokalt (`npm run dev`) fungerar allt utom uppläsningen. Högst 3 000 tecken per anrop
+  (längre sagor skickas i delar) och ett antal uppläsningar per besökare och dag.
 
 ## Struktur
 
@@ -69,9 +59,8 @@ src/
   data/demoStory.ts           exempelsagor
   lib/trollis.ts              Trollis svar, helt lokalt
   hooks/useStories.ts         sparade sagor (localStorage)
-  hooks/useNarration.ts       uppläsning via appens server
+  hooks/useNarration.ts       uppläsning via Shipholms röst (POST /speak)
   hooks/useSound.ts           små ljudeffekter med Web Audio
-deploy/server.mjs             servern: appen och uppläsningen (ElevenLabs)
 ```
 
 ## Licens
